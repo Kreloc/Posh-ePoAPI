@@ -33,7 +33,7 @@ Function Connect-ePoServer
 		[Parameter(Mandatory=$False,
 		ValueFromPipeline=$True, ValueFromPipelinebyPropertyName=$true)]
 		[alias("CN","MachineName")]
-		[string]$ePOServer	= "https://avjnu01:8443"
+		[string]$ePOServer	= "https://mcafeeURL"
 	)
 	Begin
 	{
