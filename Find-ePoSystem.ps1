@@ -40,6 +40,15 @@ Function Find-ePoSystem
 		$results = Invoke-ePoCommand -Command "system.find" -Parameters "searchText=$($Filter)"
 		$FoundSystems = ForEach($Computer in $results.result.list.row)
 		{
+        $TotalSpace = $Computer | Select -ExpandProperty EPOComputerProperties.TotalDiskSpace
+        If($TotalSpace -ne 0)
+        {
+            $PercentDiskSpaceFree = ([MATH]::Round(($Computer | Select -ExpandProperty EPOComputerProperties.FreeDiskSpace) / ($Computer | Select -ExpandProperty EPOComputerProperties.TotalDiskSpace), 3)) * 100
+		}
+        else
+        {
+            $PercentDiskSpaceFree = 0
+        }
 		$props = @{ComputerName = ($Computer | Select -ExpandProperty EPOComputerProperties.ComputerName)
 					ADDescription = ($Computer | Select -ExpandProperty EPOComputerProperties.Description)
 					SystemDescription = ($Computer | Select -ExpandProperty EPOComputerProperties.SystemDescription)
@@ -48,7 +57,8 @@ Function Find-ePoSystem
 					FreeMemory = ($Computer | Select -ExpandProperty EPOComputerProperties.FreeMemory)
 					FreeDiskSpace = ($Computer | Select -ExpandProperty EPOComputerProperties.FreeDiskSpace)
 					TotalDiskSpace = ($Computer | Select -ExpandProperty EPOComputerProperties.TotalDiskSpace)
-					Tags = ($Computer | Select -ExpandProperty EPOLeafNode.Tags)
+                    PercentDiskSpaceFree = $PercentDiskSpaceFree
+                    Tags = ($Computer | Select -ExpandProperty EPOLeafNode.Tags)
 					LastUpdate = ($Computer | Select -ExpandProperty EPOLeafNode.LastUpdate)
 					AgentVersion = ($Computer | Select -ExpandProperty EPOLeafNode.AgentVersion)
 					AgentGUID = ($Computer | Select -ExpandProperty EPOLeafNode.AgentGUID)
