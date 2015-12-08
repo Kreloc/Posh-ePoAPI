@@ -35,7 +35,7 @@ Function Invoke-ePOCommand
 	{
 		If(!($Parameters))
 		{
-			$url = "$($epoServer)/remote/$($Command)&:output=xml"	
+			$url = "$($epoServer)/remote/$($Command)?&:output=xml"	
 		}
 		else
 		{
