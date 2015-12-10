@@ -21,10 +21,16 @@ Function Connect-ePoServer
 			Connect-ePoServer -ePOServer "https://yourserver"
 			
 			Connects to the McAfee EPO Server at https://yourserver
+
+        .EXAMPLE
+            Connect-ePoServer -ePoServer -ePOServer "https://yourserver"
+            $ePoCommands | Where {$_.Command -like "*system*"} | Get-ePoCommandHelp
+
+            This makes an active connection to the server. It then gets the command help for all of the commands that have the word system in it.
 			
 		.NOTES
-			This function creates two global variables, ePOServer and ePOCommands. ePOServer is the url of the McAfee EPO Server and ePOCommands is an XML
-			variable of all of the commands available to the current user.
+			This function creates two global variables, ePOServer and ePOCommands. ePOServer is the url of the McAfee EPO Server and ePOCommands is a custom PowerShell
+            object that contains the command and the full command text from the core.help command. This variable $ePoCommands can be piped to Get-ePoCommandHelp.
 			
 	#>
 	[CmdletBinding()]
@@ -60,8 +66,17 @@ Function Connect-ePoServer
 	Process 
 	{
 		$url = "$($epoServer)/remote/core.help?:output=xml"
-		$global:ePoCommands = [xml](($wc.DownloadString($url)) -replace "OK:`r`n")
-		$ePoCommands.result.list.element
+		$ePoCommands = [xml](($wc.DownloadString($url)) -replace "OK:`r`n")
+		$global:ePoCommands = ForEach($Command in $ePoCommands.result.list.element)
+        {
+            $CommandName = ($Command -split ' ')[0]
+            $CommandUse = $Command -replace ".*-"
+            $props = @{Command=$CommandName
+              CommandText=$CommandUse
+              }
+            New-Object -TypeName PSObject -Property $props
+        }
+        $ePoCommands
 	}
 	End{}
 }
