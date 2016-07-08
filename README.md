@@ -1,8 +1,7 @@
 POSH-ePoAPI
 ==========
 
-This is a PowerShell module for working with the LANDesk Console
-Web based MBSDK.
+This is a PowerShell module for working with the McAfee ePo server API.
 
 #Instructions
 
