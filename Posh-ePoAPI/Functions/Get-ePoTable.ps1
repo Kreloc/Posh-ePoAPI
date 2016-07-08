@@ -22,10 +22,6 @@
 			
 			Returns an object of the results of the core.listTables API command with a table name of MyTable.
 			
-		.NOTES
-			Requires Connect-ePoServer to have been run first. All output is returned as a string currently, still looking
-			into ways to convert it to an object.
-			
 	#>
 	[CmdletBinding()]
 	param
@@ -35,7 +31,14 @@
         [AllowEmptyString()]
 		[string]$TableName = ""
 	)
-	Begin{}
+	Begin
+    {
+		If(!($epoServer))
+		{
+			Write-Warning "Connection to ePoServer not found. Please run Connect-ePoServer first."
+			break
+		}     
+    }
 	Process 
 	{
         If($TableName -notlike "")

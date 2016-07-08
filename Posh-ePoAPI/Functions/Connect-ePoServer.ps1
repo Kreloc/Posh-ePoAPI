@@ -29,21 +29,30 @@ Function Connect-ePoServer
             This makes an active connection to the server. It then gets the command help for all of the commands that have the word system in it.
 			
 		.NOTES
-			This function creates two global variables, ePOServer and ePOCommands. ePOServer is the url of the McAfee EPO Server and ePOCommands is a custom PowerShell
-            object that contains the command and the full command text from the core.help command. This variable $ePoCommands can be piped to Get-ePoCommandHelp.
+			This function creates three global variables, wc, ePOServer and ePOCommands. ePOServer is the url of the McAfee EPO Server and ePOCommands is a custom PowerShell
+            object that contains the command and the full command text from the core.help command. wc is the System.Net.WebClient that has the credentials and actuallys sends
+            the requests to the ePo API. The variable $ePoCommands can be piped to Get-ePoCommandHelp.
+            Please set the $ePOServer parameter to default to your McAfee server, as the other functions will attempt to connect using the default value for that parameter
+            if no connection is found.
 			
 	#>
 	[CmdletBinding()]
 	param
 	(
-		[Parameter(Mandatory=$False,
+		[Parameter(Mandatory=$True,
 		ValueFromPipeline=$True, ValueFromPipelinebyPropertyName=$true)]
-		[alias("CN","MachineName")]
-		[string]$ePOServer	= "https://mcafeeURL"
+		[string]$ePOServer,
+        [Parameter(Mandatory=$False,
+        ValueFromPipelinebyPropertyName=$true)]
+        $Credentials = (Get-Credential)
 	)
 	Begin
 	{
-		add-type @"
+    	$BeginEA = $ErrorActionPreference
+		$ErrorActionPreference = 'Stop'
+        Try
+        {
+		    add-type @"
     using System.Net;
     using System.Security.Cryptography.X509Certificates;
     public class TrustAllCertsPolicy : ICertificatePolicy {
@@ -54,14 +63,18 @@ Function Connect-ePoServer
         }
     }
 "@
-[System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
-
+            [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
+        }
+        Catch
+        {
+            Write-Warning "TrustAllCertsPolicy already exists"
+        }     
 		$global:epoServer = $ePOServer
-		$Credentials = Get-Credential
 		$epoUser= $Credentials.GetNetworkCredential().username
 		$epoPassword=$Credentials.GetNetworkCredential().password
 		$global:wc=new-object System.net.WebClient
 		$wc.Credentials = New-Object System.Net.NetworkCredential -ArgumentList ($epouser,$epopassword)
+        $ErrorActionPreference = $BeginEA
 	}
 	Process 
 	{
@@ -76,7 +89,6 @@ Function Connect-ePoServer
               }
             New-Object -TypeName PSObject -Property $props
         }
-        $ePoCommands
 	}
 	End{}
 }

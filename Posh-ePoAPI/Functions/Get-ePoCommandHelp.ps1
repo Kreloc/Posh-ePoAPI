@@ -31,7 +31,14 @@ Function Get-ePoCommandHelp
 		ValueFromPipelinebyPropertyName=$true)]
 		[string]$Command	
 	)
-	Begin{}
+	Begin
+    {
+		If(!($epoServer))
+		{
+			Write-Warning "Connection to ePoServer not found. Please run Connect-ePoServer first."
+			break
+		}   
+    }
 	Process 
 	{
 		$url = "$($epoServer)/remote/core.help?command=$($Command)&:output=xml"

@@ -9,7 +9,8 @@
 			as this function uses the epoServer global variable created by that functions connection to the server. Uses the Invoke-ePoCommand
 		
 		.PARAMETER Filter
-			The search string to use for finding the detected system. This can be the DNS Name, Domain, NetBIOS information, User or IPv4 or IPv6 address
+			The search string to use for finding the detected system. This can be the DNS Name, Domain, NetBIOS information, User or IPv4 or IPv6 address.
+            Defaults to a space which returns all of the detected systems.
 			
 		.EXAMPLE
 			$CurrentPC = Find-ePoDetectedSystem -Filter $env:computername
@@ -22,25 +23,32 @@
 			
 			Returns an object of the results of the system.find search for systems with Mark as their user.
 
-         EXAMPLE
+        .EXAMPLE
             $DomainFoundDetectedSystems = Find-ePoDetectedSystem -Filter "contonoso.com"
             $DomainFoundDetectedSystems
 
             Finds all of the detectedsystems with contonoso.com as their domain.
 			
-		.NOTES
-			Requires Connect-ePoServer to have been run first. All output is returned as a string currently, still looking
-			into ways to convert it to an object.
-			
+        .EXAMPLE			
+            Find-ePoDetectedSystem -Verbose
+
+            Finds all of the detecedsystems
 	#>
 	[CmdletBinding()]
 	param
 	(
-		[Parameter(Mandatory=$True,
+		[Parameter(Mandatory=$False,
 		ValueFromPipeline=$True, ValueFromPipelinebyPropertyName=$true)]
-		[string]$Filter
+		[string]$Filter = " "
 	)
-	Begin{}
+	Begin
+    {
+		If(!($epoServer))
+		{
+			Write-Warning "Connection to ePoServer not found. Please run Connect-ePoServer first."
+			break
+		}  
+    }
 	Process 
 	{
 		$results = Invoke-ePoCommand -Command "detectedsystem.find" -Parameters "searchText=$($Filter)"

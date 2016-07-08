@@ -23,7 +23,7 @@
             the Start-ePoClientTask function.	
 			
 	#>
-	[CmdletBinding()]
+	[CmdletBinding(SupportsShouldProcess=$true)]
 	param
 	(
 		[Parameter(Mandatory=$True,
@@ -37,14 +37,25 @@
 		$ProductId
         	
 	)
-	Begin{}
+	Begin
+    {
+		If(!($epoServer))
+		{
+			Write-Warning "Connection to ePoServer not found. Please run Connect-ePoServer first."
+			break
+		}     
+    }
 	Process 
 	{
+        Write-Verbose "Sending command clienttask.run to ePo API with parameters names=$($ComputerName)&productId=$($ProductId)&taskId=$($TaskId)"
         $results = Invoke-ePoCommand -Command "clienttask.run" -Parameters "names=$($ComputerName)&productId=$($ProductId)&taskId=$($TaskId)"
         $props = @{ResultStatus=$results.result
                     ComputerName=$ComputerName
                     }
-        New-Object -TypeName psobject -Property $props
+        If($PSCmdlet.ShouldProcess("$ComputerName","Outputting run result object"))
+        {        
+            New-Object -TypeName psobject -Property $props
+        }
 	}
 	End{}
 }

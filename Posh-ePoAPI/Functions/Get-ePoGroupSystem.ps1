@@ -24,17 +24,13 @@
 		.EXAMPLE
 			$FoundSystems = Get-ePoGroupSystem -GroupId "519" -Recurse
 			
-			Returns an object of the results of the system.find search for systems with lt in their names.
+			Returns an object of the results of the systems in the Group with an ID of 519.
 
         .EXAMPLE
             $FoundSystems = Get-ePoGroup -Filter "Admin" | Get-ePoGroupSystem
 
             This example first gets the GroupID using Get-ePGroup with a Filter for the word Admin and then pipes that GroupID
             to find all of the computer systems under that group.
-			
-		.NOTES
-			Requires Connect-ePoServer to have been run first. All output is returned as a string currently, still looking
-			into ways to convert it to an object.
 			
 	#>
 	[CmdletBinding()]
@@ -45,7 +41,14 @@
 		[string]$GroupID,
         [switch]$Recurse
 	)
-	Begin{}
+	Begin
+    {
+		If(!($epoServer))
+		{
+			Write-Warning "Connection to ePoServer not found. Please run Connect-ePoServer first."
+			break
+		}  
+    }
 	Process 
 	{
         If(!($Recurse))

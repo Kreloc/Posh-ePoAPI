@@ -14,14 +14,17 @@
 			
 			Returns an object of the results of the system.findGroups search for groups with Admin in their names.
 			
-		.NOTES
-			Requires Connect-ePoServer to have been run first. All output is returned as a string currently, still looking
-			into ways to convert it to an object.
-			
 	#>
 	[CmdletBinding()]
 	param()
-	Begin{}
+	Begin
+    {
+		If(!($epoServer))
+		{
+			Write-Warning "Connection to ePoServer not found. Please run Connect-ePoServer first."
+			break
+		}     
+    }
 	Process 
 	{
         Write-Verbose "Running the API Command scheduler.listAllServerTasks"

@@ -32,9 +32,16 @@
 	(
 		[Parameter(Mandatory=$False,
 		ValueFromPipeline=$True, ValueFromPipelinebyPropertyName=$true)]
-		[string]$Filter
+		[string]$Filter = " "
 	)
-	Begin{}
+	Begin
+    {
+		If(!($epoServer))
+		{
+			Write-Warning "Connection to ePoServer not found. Please run Connect-ePoServer first."
+			break
+		}  
+    }
 	Process 
 	{
         If($Filter)
