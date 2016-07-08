@@ -12,7 +12,7 @@
 RootModule = 'Posh-ePoAPI.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.3'
+ModuleVersion = '1.3.1'
 
 # ID used to uniquely identify this module
 GUID = '6802c6cc-1aa7-4010-98bc-eb7bc54b0f91'
