@@ -1,1 +1,1 @@
-Get-ChildItem -Path $PSScriptRoot -Filer "*.ps1" -Recurse | Foreach-Object{ . $_.FullName }
+Get-ChildItem -Path $PSScriptRoot -Filter "*.ps1" -Recurse | Foreach-Object{ . $_.FullName }
