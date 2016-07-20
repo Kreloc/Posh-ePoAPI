@@ -1,52 +1,40 @@
 ---
-external help file: PSLANDesk-help.xml
+external help file: Posh-ePoAPI-help.xml
 online version: 
 schema: 2.0.0
 ---
 
-# Remove-LANDeskComputer
+# Get-ePoTaskLogSubTask
 ## SYNOPSIS
-Removes specified computer from LANDesk.
+The Get-ePoTaskLogSubTask gets information about the taskID specified.
 
 ## SYNTAX
 
 ```
-Remove-LANDeskComputer [-ComputerName] <String[]> [-WhatIf] [-Confirm]
+Get-ePoTaskLogSubTask [-taskId] <Int32[]> [-WhatIf] [-Confirm]
 ```
 
 ## DESCRIPTION
-Removes specified computer from LANDesk.
+The Get-ePoTaskLogSubTask gets information about the taskID specified.
+Needs Connect-ePoServer to have been run
+         and uses the Invoke-ePoCommand function.
 
 ## EXAMPLES
 
 ### -------------------------- EXAMPLE 1 --------------------------
 ```
-
+Get-ePoTaskLogSubTask -taskId 111
 ```
 
-Removes the computer specified for ComputerName.
-
-### -------------------------- EXAMPLE 2 --------------------------
-```
-Remove-LANDesk -ComputerName "THATPC" -WhatIf
-```
-
-Removes the computer named THATPC but doesn't perform the action, instead displaying the WhatIf message.
-
-### -------------------------- EXAMPLE 3 --------------------------
-```
-Get-Content computers.txt | Remove-LANDeskComputer
-```
-
-Remove each computername listed on each line of computers.txt
+Gets information about the task with an Id of 111.
 
 ## PARAMETERS
 
-### -ComputerName
-The name or names of the computers to remove from the LANDesk database.
+### -taskId
+The ID number of the task to find information about.
 
 ```yaml
-Type: String[]
+Type: Int32[]
 Parameter Sets: (All)
 Aliases: 
 
@@ -92,6 +80,11 @@ Accept wildcard characters: False
 ## OUTPUTS
 
 ## NOTES
+This function is still a work in progress.
+         Added support for an array of integers being passed to the taskId parameter.
+         Added custom error handling.
+Uses Write-Warning to display the Error if the taskID does not exists but should continue to the next one if another is specified.
+         Added support for Whatif
 
 ## RELATED LINKS
 

@@ -28,10 +28,12 @@
 
 		.NOTES
             This function is still a work in progress.
-			Parameters are still a work in progress for this function. Please only use it without the parameters.			
+			Parameters are still a work in progress for this function. Please only use it without the parameters.
+            Added support for Whatif
+            TODO: Add support for other parameters.		
 			
 	#>
-	[CmdletBinding()]
+	[CmdletBinding(SupportsShouldProcess=$true)]
 	param
 	(
 		[Parameter(Mandatory=$False,
@@ -85,19 +87,23 @@
         {
             $results = Invoke-ePoCommand -Command "tasklog.listTaskHistory"    
         }
-        $TaskLogHistory = ForEach($result in $results.result.list.taskLogEntry)
-        {
-            $props = @{taskLogId=$result.id
-                        TaskName=$result.name
-                        startDate=(Get-Date ($result.startDate))
-                        endDate=(Get-Date ($result.endDate))
-                        UserStartedTask=$result.userName
-                        taskSource=$result.taskSource
-                        taskDuration=$result.duration         
+        If($PSCmdlet.ShouldProcess("listTaskHistory","Creating output from results of "))
+        {  
+            $TaskLogHistory = @()
+            ForEach($result in $results.result.list.taskLogEntry)
+            {
+                $props = @{taskLogId=$result.id
+                            TaskName=$result.name
+                            startDate=(Get-Date ($result.startDate))
+                            endDate=(Get-Date ($result.endDate))
+                            UserStartedTask=$result.userName
+                            taskSource=$result.taskSource
+                            taskDuration=$result.duration         
+                }
+               $TaskLogHistory += New-Object -TypeName psobject -Property $props
             }
-            New-Object -TypeName psobject -Property $props
+            $TaskLogHistory
         }
-        $TaskLogHistory
 	}
 	End{}
 }

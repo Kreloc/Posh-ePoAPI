@@ -45,3 +45,6 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+#Custom files to ignore
+epo_460_scripting_guide_en-us.pdf

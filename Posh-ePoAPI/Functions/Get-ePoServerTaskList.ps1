@@ -14,8 +14,12 @@
 			
 			Returns an object of the results of the system.findGroups search for groups with Admin in their names.
 			
+        .NOTES
+            Added logic to change true/false strings returned by API into boolean $True or $False values.
+            Added logic to change date strings into DateTime objects.
+            Added support for Whatif
 	#>
-	[CmdletBinding()]
+	[CmdletBinding(SupportsShouldProcess=$true)]
 	param()
 	Begin
     {
@@ -30,68 +34,72 @@
         Write-Verbose "Running the API Command scheduler.listAllServerTasks"
         $results = Invoke-ePoCommand -Command "scheduler.listAllServerTasks"
         Write-verbose "Looping thru the results and creating a PowerShell object from that information."
-		$Tasks = ForEach($Task in $results.result.list.serverTask)
-		{
-            If($task.startDate -notlike "None")
-            {
-                $StartDate = Get-Date ($Task.startDate)
-            }
-            else
-            {
-                $StartDate = $Task.startDate
-            }
-            If($task.endDate -notlike "None")
-            {
-                $EndDate = Get-Date ($Task.endDate)
-            }
-            else
-            {
-                $EndDate = $Task.endDate
-            }
-            If($task.nextRunTime -notlike "None")
-            {
-                $NextRunTime = Get-Date ($Task.nextRunTime)
-            }
-            else
-            {
-                $NextRunTime = $Task.nextRunTime
-            }
-            If($task.enabled -eq "false")
-            {
-                $Enabled = $False
-            }
-            elseIf($task.enabled -eq "true")
-            {
-                $Enabled = $True
-            }
-            else
-            {
-                $Enabled = $Task.enabled
-            }
-            If($task.valid -eq "false")
-            {
-                $Valid = $False
-            }
-            elseIf($task.valid -eq "true")
-            {
-                $Valid = $True
-            }
-            else
-            {
-                $Valid = $task.valid
-            }
-		    $props = @{TaskID = $Task.id
-                       Name = $Task.name
-                       Description = $Task.description
-                       startDate = $StartDate
-                       endDate = $EndDate
-                       nextRunTime = $NextRunTime
-                       Enabled = $Enabled
-                       Valid = $Valid
+		$Tasks = @()
+        If($PSCmdlet.ShouldProcess("listAllServerTasks","Creating and outputting results of API command"))
+        { 
+            ForEach($Task in $results.result.list.serverTask)
+		    {
+                If($task.startDate -notlike "None")
+                {
+                    $StartDate = Get-Date ($Task.startDate)
+                }
+                else
+                {
+                    $StartDate = $Task.startDate
+                }
+                If($task.endDate -notlike "None")
+                {
+                    $EndDate = Get-Date ($Task.endDate)
+                }
+                else
+                {
+                    $EndDate = $Task.endDate
+                }
+                If($task.nextRunTime -notlike "None")
+                {
+                    $NextRunTime = Get-Date ($Task.nextRunTime)
+                }
+                else
+                {
+                    $NextRunTime = $Task.nextRunTime
+                }
+                If($task.enabled -eq "false")
+                {
+                    $Enabled = $False
+                }
+                elseIf($task.enabled -eq "true")
+                {
+                    $Enabled = $True
+                }
+                else
+                {
+                    $Enabled = $Task.enabled
+                }
+                If($task.valid -eq "false")
+                {
+                    $Valid = $False
+                }
+                elseIf($task.valid -eq "true")
+                {
+                    $Valid = $True
+                }
+                else
+                {
+                    $Valid = $task.valid
+                }
+		        $props = @{TaskID = $Task.id
+                           Name = $Task.name
+                           Description = $Task.description
+                           startDate = $StartDate
+                           endDate = $EndDate
+                           nextRunTime = $NextRunTime
+                           Enabled = $Enabled
+                           Valid = $Valid
+		        }
+                $Tasks += New-Object -TypeName PSObject -Property $props
 		    }
-		    New-Object -TypeName PSObject -Property $props
-		}
-		$Tasks
+		    $Tasks
+        }
 	}
 	End{}
 }

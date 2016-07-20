@@ -34,10 +34,14 @@
         .EXAMPLE
             Get-ePoClientTask -Verbose
 
-            Gets all of the Client tasks on the ePo server. 
+            Gets all of the Client tasks on the ePo server.
+
+        .NOTES
+            Can be used with to filter for a client task and then pipe the results to the Start-ePoClientTask.
+            Added support for -Whatif
 			
 	#>
-	[CmdletBinding()]
+	[CmdletBinding(SupportsShouldProcess=$true)]
 	param
 	(
 		[Parameter(Mandatory=$False,
@@ -56,17 +60,21 @@
 	{
         Write-Verbose "Sending clienttask.find command to ePo API with parameter searchText=$($Filter)"
 		$results = Invoke-ePoCommand -Command "clienttask.find" -Parameters "searchText=$($Filter)"
-        $ClientTasks = ForEach($result in $results.result.list.element.objectTask)
-        {
-            $props = @{TaskId=$result.objectId
-                       TaskName=$result.objectName
-                       ProductId=$result.productId
-                       typeId=$result.typeId
-                       typeName=$result.typeName
+        If($PSCmdlet.ShouldProcess("$Filter","Creating output object for clienttask.find command results found using filter"))
+        {         
+            $ClientTasks = @()
+            ForEach($result in $results.result.list.element.objectTask)
+            {
+                $props = @{TaskId=$result.objectId
+                           TaskName=$result.objectName
+                           ProductId=$result.productId
+                           typeId=$result.typeId
+                           typeName=$result.typeName
+                }
+                $ClientTasks += New-Object -TypeName psobject -Property $props
             }
-        New-Object -TypeName psobject -Property $props
+            $ClientTasks
         }
-        $ClientTasks
 	}
 	End{}
 }

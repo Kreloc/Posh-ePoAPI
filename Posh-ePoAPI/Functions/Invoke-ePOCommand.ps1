@@ -17,6 +17,9 @@ Function Invoke-ePOCommand
 			$CurrentPC.result.list.row
 		
 			Retruns the output of the system.find API command with a search paramter for the current computer.
+        
+        .NOTES
+            Added support for -Whatif
 
 			
 	#>
@@ -52,7 +55,10 @@ Function Invoke-ePOCommand
 			    $url = "$($epoServer)/remote/$($Command)?$($Parameters)&:output=xml"
             }
 		}
-		[xml](($wc.DownloadString($url)) -replace "OK:`r`n")
+        If($PSCmdlet.ShouldProcess("$Command","Downloading data in xml from commands sent to McAfee ePo API"))
+        {
+		    [xml](($wc.DownloadString($url)) -replace "OK:`r`n")
+        }
 	}
 	End{}
 }

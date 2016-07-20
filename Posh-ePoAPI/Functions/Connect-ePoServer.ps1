@@ -6,7 +6,7 @@ Function Connect-ePoServer
 		
 		.DESCRIPTION
 			The Connect-ePoServer function establishes a connection the McAfee EPO Server. All results are returned in XML
-			format. The System.Net below is to bypass unstrusted https, which the server in my environment returns. Lists all
+			format. The System.Net below is to bypass unstrusted https, since by default ePo server self signs its cert. Lists all
 			of the commands available after a successful connection has been made.
 		
 		.PARAMETER ePOServer
@@ -29,11 +29,11 @@ Function Connect-ePoServer
             This makes an active connection to the server. It then gets the command help for all of the commands that have the word system in it.
 			
 		.NOTES
-			This function creates three global variables, wc, ePOServer and ePOCommands. ePOServer is the url of the McAfee EPO Server and ePOCommands is a custom PowerShell
-            object that contains the command and the full command text from the core.help command. wc is the System.Net.WebClient that has the credentials and actuallys sends
-            the requests to the ePo API. The variable $ePoCommands can be piped to Get-ePoCommandHelp.
-            Please set the $ePOServer parameter to default to your McAfee server, as the other functions will attempt to connect using the default value for that parameter
-            if no connection is found.
+			This function currently creates three script scope variables. 
+            The variable names are:wc, ePOServer. ePOServer is the url of the McAfee EPO Server. ePoCommands is a custom PowerShell object with the Command and CommandText for each
+            command found using the core.help API command. wc is the System.Net.WebClient that has the credentials and actually sends
+            the requests to the ePo API.
+            Added logic to check that the connection to the ePoServer works.
 			
 	#>
 	[CmdletBinding()]
@@ -48,46 +48,36 @@ Function Connect-ePoServer
 	)
 	Begin
 	{
-    	$BeginEA = $ErrorActionPreference
-		$ErrorActionPreference = 'Stop'
-        Try
-        {
-		    add-type @"
-    using System.Net;
-    using System.Security.Cryptography.X509Certificates;
-    public class TrustAllCertsPolicy : ICertificatePolicy {
-        public bool CheckValidationResult(
-            ServicePoint srvPoint, X509Certificate certificate,
-            WebRequest request, int certificateProblem) {
-            return true;
-        }
-    }
-"@
-            [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
-        }
-        Catch
-        {
-            Write-Warning "TrustAllCertsPolicy already exists"
-        }     
-		$global:epoServer = $ePOServer
+        [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
+		$script:epoServer = $ePOServer
 		$epoUser= $Credentials.GetNetworkCredential().username
 		$epoPassword=$Credentials.GetNetworkCredential().password
-		$global:wc=new-object System.net.WebClient
+		$script:wc=new-object System.net.WebClient
 		$wc.Credentials = New-Object System.Net.NetworkCredential -ArgumentList ($epouser,$epopassword)
-        $ErrorActionPreference = $BeginEA
 	}
 	Process 
 	{
 		$url = "$($epoServer)/remote/core.help?:output=xml"
-		$ePoCommands = [xml](($wc.DownloadString($url)) -replace "OK:`r`n")
-		$global:ePoCommands = ForEach($Command in $ePoCommands.result.list.element)
+        Try
+        {
+		    $ePoCommands = [xml](($wc.DownloadString($url)) -replace "OK:`r`n")
+        }
+        Catch
+        {
+            Write-Error $_
+            Write-Warning "There was an error connecting to the server at $($ePoServer)"
+            $ePOServer = $null
+            $wc = $null
+        }
+        $script:ePoCommands = @()
+		ForEach($Command in $ePoCommands.result.list.element)
         {
             $CommandName = ($Command -split ' ')[0]
             $CommandUse = $Command -replace ".*-"
             $props = @{Command=$CommandName
               CommandText=$CommandUse
               }
-            New-Object -TypeName PSObject -Property $props
+            $ePoCommands += New-Object -TypeName PSObject -Property $props
         }
 	}
 	End{}

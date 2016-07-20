@@ -25,10 +25,14 @@ Function Find-ePoSystem
         .EXAMPLE
             $AllSystems = Find-ePoSystem -Verbose
             
-            Returns an object of the results of the system.find search for all systems. 
+            Returns an object of the results of the system.find search for all systems.
+
+        .NOTES
+            Added logic to determine the Percent of disk space left on each system.
+            TODO: Add support for Whatif
 			
 	#>
-	[CmdletBinding()]
+	[CmdletBinding(SupportsShouldProcess=$true)]
 	param
 	(
 		[Parameter(Mandatory=$False,
@@ -47,35 +51,39 @@ Function Find-ePoSystem
 	{
         Write-Verbose "Sending system.find command to ePo API with parameter searchText=$($Filter)"
 		$results = Invoke-ePoCommand -Command "system.find" -Parameters "searchText=$($Filter)"
-		$FoundSystems = ForEach($Computer in $results.result.list.row)
-		{
-            Write-Verbose "Getting properties for $($Computer | Select -ExpandProperty EPOComputerProperties.ComputerName)"
-            $TotalSpace = $Computer | Select -ExpandProperty EPOComputerProperties.TotalDiskSpace
-            If($TotalSpace -ne 0)
-            {
-                $PercentDiskSpaceFree = ([MATH]::Round(($Computer | Select -ExpandProperty EPOComputerProperties.FreeDiskSpace) / ($Computer | Select -ExpandProperty EPOComputerProperties.TotalDiskSpace), 3)) * 100
+        If($PSCmdlet.ShouldProcess("$Filter","Creating output object for system.find command results found using filter"))
+        {   		
+            $FoundSystems = @()
+            ForEach($Computer in $results.result.list.row)
+		    {
+                Write-Verbose "Getting properties for $($Computer | Select -ExpandProperty EPOComputerProperties.ComputerName)"
+                $TotalSpace = $Computer | Select -ExpandProperty EPOComputerProperties.TotalDiskSpace
+                If($TotalSpace -ne 0)
+                {
+                    $PercentDiskSpaceFree = ([MATH]::Round(($Computer | Select -ExpandProperty EPOComputerProperties.FreeDiskSpace) / ($Computer | Select -ExpandProperty EPOComputerProperties.TotalDiskSpace), 3)) * 100
+		        }
+                else
+                {
+                    $PercentDiskSpaceFree = 0
+                }
+                $props = @{ComputerName = ($Computer | Select -ExpandProperty EPOComputerProperties.ComputerName)
+					        ADDescription = ($Computer | Select -ExpandProperty EPOComputerProperties.Description)
+					        SystemDescription = ($Computer | Select -ExpandProperty EPOComputerProperties.SystemDescription)
+					        UserName = ($Computer | Select -ExpandProperty EPOComputerProperties.UserName)
+					        TotalPhysicalMemory = ($Computer | Select -ExpandProperty EPOComputerProperties.TotalPhysicalMemory)
+					        FreeMemory = ($Computer | Select -ExpandProperty EPOComputerProperties.FreeMemory)
+					        FreeDiskSpace = ($Computer | Select -ExpandProperty EPOComputerProperties.FreeDiskSpace)
+					        TotalDiskSpace = ($Computer | Select -ExpandProperty EPOComputerProperties.TotalDiskSpace)
+                            PercentDiskSpaceFree = $PercentDiskSpaceFree
+                            Tags = ($Computer | Select -ExpandProperty EPOLeafNode.Tags)
+					        LastUpdate = ($Computer | Select -ExpandProperty EPOLeafNode.LastUpdate)
+					        AgentVersion = ($Computer | Select -ExpandProperty EPOLeafNode.AgentVersion)
+					        AgentGUID = ($Computer | Select -ExpandProperty EPOLeafNode.AgentGUID)
+		        }
+		        $FoundSystems += New-Object -TypeName PSObject -Property $props
 		    }
-            else
-            {
-                $PercentDiskSpaceFree = 0
-            }
-		    $props = @{ComputerName = ($Computer | Select -ExpandProperty EPOComputerProperties.ComputerName)
-					    ADDescription = ($Computer | Select -ExpandProperty EPOComputerProperties.Description)
-					    SystemDescription = ($Computer | Select -ExpandProperty EPOComputerProperties.SystemDescription)
-					    UserName = ($Computer | Select -ExpandProperty EPOComputerProperties.UserName)
-					    TotalPhysicalMemory = ($Computer | Select -ExpandProperty EPOComputerProperties.TotalPhysicalMemory)
-					    FreeMemory = ($Computer | Select -ExpandProperty EPOComputerProperties.FreeMemory)
-					    FreeDiskSpace = ($Computer | Select -ExpandProperty EPOComputerProperties.FreeDiskSpace)
-					    TotalDiskSpace = ($Computer | Select -ExpandProperty EPOComputerProperties.TotalDiskSpace)
-                        PercentDiskSpaceFree = $PercentDiskSpaceFree
-                        Tags = ($Computer | Select -ExpandProperty EPOLeafNode.Tags)
-					    LastUpdate = ($Computer | Select -ExpandProperty EPOLeafNode.LastUpdate)
-					    AgentVersion = ($Computer | Select -ExpandProperty EPOLeafNode.AgentVersion)
-					    AgentGUID = ($Computer | Select -ExpandProperty EPOLeafNode.AgentGUID)
-		    }
-		    New-Object -TypeName PSObject -Property $props
-		}
-		$FoundSystems
+		    $FoundSystems
+        }
 	}
 	End{}
 }

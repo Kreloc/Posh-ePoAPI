@@ -14,10 +14,13 @@
 			$ePoQueries
 		
 			Retruns the output of the core.listQueries API command and stores the PowerShell custom object in a variable.
+
+        .NOTES
+            Used by Start-ePoQuery
 			
 			
 	#>
-	[CmdletBinding()]
+	[CmdletBinding(SupportsShouldProcess=$true)]
 	param
 	()
 	Begin
@@ -31,23 +34,27 @@
 	Process 
 	{
         $results = Invoke-ePOCommand -Command "core.listQueries"
-        $Queries = ForEach($result in $results.result.list.query)
-        {
-            $props = @{
-            QueryId=$result.id
-            Name=$result.name
-            Description=$result.description
-            ConditionExpression=$result.conditionSexp
-            GroupName=$result.groupName
-            UserName=$result.userName
-            CreatedOn=(Get-Date $result.createdOn)
-            ModifiedOn=(Get-Date $result.modifiedOn)
-            CreatedBy=$result.createdBy
-            ModifiedBy=$result.modifiedBy
+        If($PSCmdlet.ShouldProcess("core.listQueries","Creating output object for command"))
+        {          
+            $Queries = @()
+            ForEach($result in $results.result.list.query)
+            {
+                $props = @{
+                QueryId=$result.id
+                Name=$result.name
+                Description=$result.description
+                ConditionExpression=$result.conditionSexp
+                GroupName=$result.groupName
+                UserName=$result.userName
+                CreatedOn=(Get-Date $result.createdOn)
+                ModifiedOn=(Get-Date $result.modifiedOn)
+                CreatedBy=$result.createdBy
+                ModifiedBy=$result.modifiedBy
+                }
+                $Queries += New-Object -TypeName psobject -Property $props
             }
-            New-Object -TypeName psobject -Property $props
+            $Queries
         }
-        $Queries
     }
     End{}
 }

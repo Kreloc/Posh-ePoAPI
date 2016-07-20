@@ -1,47 +1,37 @@
 ---
-external help file: PSLANDesk-help.xml
+external help file: Posh-ePoAPI-help.xml
 online version: 
 schema: 2.0.0
 ---
 
-# Start-LANDeskQuery
+# Get-ePoQuery
 ## SYNOPSIS
-The Start-LANDeskQuery function runs the specified LANDesk query and returns the results.
+Gets queries available using the ePo API.
 
 ## SYNTAX
 
 ```
-Start-LANDeskQuery [-QueryName] <String> [-WhatIf] [-Confirm]
+Get-ePoQuery [-WhatIf] [-Confirm]
 ```
 
 ## DESCRIPTION
-The Start-LANDeskQuery function runs the specified LANDesk query and returns the results using the Webservice object.
+Sends the command specified to the McAfee EPO server.
+Connect-ePoServer has to be run first,
+as this function uses the epoServer global variable created by that functions connection to the server.
+Uses the Invoke-ePoCommand
 
 ## EXAMPLES
 
 ### -------------------------- EXAMPLE 1 --------------------------
 ```
-Start-LANDeskQuery "NewQuery"
+$ePoQueries = Get-ePoQuery
 ```
 
-Runs the NewQuery query and returns the results.
+$ePoQueries
+
+Retruns the output of the core.listQueries API command and stores the PowerShell custom object in a variable.
 
 ## PARAMETERS
-
-### -QueryName
-The name of the query to run.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases: 
-
-Required: True
-Position: 1
-Default value: 
-Accept pipeline input: True (ByPropertyName, ByValue)
-Accept wildcard characters: False
-```
 
 ### -WhatIf
 {{Fill WhatIf Description}}
@@ -78,6 +68,7 @@ Accept wildcard characters: False
 ## OUTPUTS
 
 ## NOTES
+Used by Start-ePoQuery
 
 ## RELATED LINKS
 

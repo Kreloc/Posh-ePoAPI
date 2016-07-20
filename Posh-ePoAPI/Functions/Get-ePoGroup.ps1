@@ -25,9 +25,10 @@
 		.NOTES
 			Requires Connect-ePoServer to have been run first. All output is returned as a string currently, still looking
 			into ways to convert it to an object.
+            Added support for Whatif
 			
 	#>
-	[CmdletBinding()]
+	[CmdletBinding(SupportsShouldProcess=$true)]
 	param
 	(
 		[Parameter(Mandatory=$False,
@@ -52,15 +53,19 @@
         {
             $results = Invoke-ePoCommand -Command "system.findGroups"
         }
-		$Groups = ForEach($Group in $results.result.list.element)
-		{
+        If($PSCmdlet.ShouldProcess("$Filter","Creating output object for epogroups found using filter"))
+        { 
+            $Groups = @()
+		    ForEach($Group in $results.result.list.element)
+		    {
        
-		    $props = @{GroupName = ($Group.GroupEPO.GroupPath)
-                        GroupID = ($Group.GroupEPO.GroupID)
+		        $props = @{GroupName = ($Group.GroupEPO.GroupPath)
+                            GroupID = ($Group.GroupEPO.GroupID)
+		        }
+                $Groups += New-Object -TypeName PSObject -Property $props
 		    }
-		    New-Object -TypeName PSObject -Property $props
-		}
-		$Groups
+		    $Groups
+        }
 	}
 	End{}
 }

@@ -20,7 +20,11 @@
 			Get-ePoClientTask -Filter "Full scan - Normal Priority" | Start-ePoClientTask -ComputerName "THATPC"
 		
 			First uses the Get-ePoClientTask function to find the correct client task and then pipes the TaskId and ProductId to 
-            the Start-ePoClientTask function.	
+            the Start-ePoClientTask function.
+            
+        .NOTES
+            Added support for -Whatif
+            TODO: Implement script wrapping this to start a virus scan on client as soon as Malware alert is triggered.
 			
 	#>
 	[CmdletBinding(SupportsShouldProcess=$true)]

@@ -32,9 +32,12 @@
         .EXAMPLE			
             Find-ePoDetectedSystem -Verbose
 
-            Finds all of the detecedsystems
+            Finds all of the detecedsystems.
+
+        .NOTES
+            Added support for Whatif
 	#>
-	[CmdletBinding()]
+	[CmdletBinding(SupportsShouldProcess=$true)]
 	param
 	(
 		[Parameter(Mandatory=$False,
@@ -52,45 +55,49 @@
 	Process 
 	{
 		$results = Invoke-ePoCommand -Command "detectedsystem.find" -Parameters "searchText=$($Filter)"
-		$FoundSystems = ForEach($Computer in $results.result.list.row)
-		{
-		$props = @{ComputerName = ($Computer | Select -ExpandProperty RSDDetectedSystems.NetbiosName)
-				    HostID = ($Computer | Select -ExpandProperty RSDDetectedSystems.HostID)
-                    AgentGUID = ($Computer | Select -ExpandProperty RSDDetectedSystems.AgentGUID)
-                    AgentVersion = ($Computer | Select -ExpandProperty RSDDetectedSystems.AgentVersion)
-                    Comments = ($Computer | Select -ExpandProperty RSDDetectedSystems.Comments)
-                    DetectedSourceName = ($Computer | Select -ExpandProperty RSDDetectedSystems.DetectedSourceName)
-                    DeviceType = ($Computer | Select -ExpandProperty RSDDetectedSystems.DeviceType)
-                    DNSName = ($Computer | Select -ExpandProperty RSDDetectedSystems.DnsName)
-                    Domain = ($Computer | Select -ExpandProperty RSDDetectedSystems.Domain)
-                    Exception = ($Computer | Select -ExpandProperty RSDDetectedSystems.Exception)
-                    ExceptionCategory = ($Computer | Select -ExpandProperty RSDDetectedSystems.ExceptionCategory)
-                    FriendlyComputerName = ($Computer | Select -ExpandProperty RSDDetectedSystems.FriendlyName)
-                    Ignored = ($Computer | Select -ExpandProperty RSDDetectedSystems.Ignored)
-                    Inactive = ($Computer | Select -ExpandProperty RSDDetectedSystems.Inactive)
-                    IPv6 = ($Computer | Select -ExpandProperty RSDDetectedSystems.IPV6)
-                    LastAgentCommunication = (Get-Date ($Computer | Select -ExpandProperty RSDDetectedSystems.LastAgentCommunication))
-                    LastDetectedTime =  (Get-Date ($Computer | Select -ExpandProperty RSDDetectedSystems.LastDetectedTime))
-                    LastReportingSensor = ($Computer | Select -ExpandProperty RSDDetectedSystems.LastReportingSensor)
-                    MACAddress = ($Computer | Select -ExpandProperty RSDDetectedSystems.MAC)
-                    Managed = ($Computer | Select -ExpandProperty RSDDetectedSystems.Managed)
-                    Description = ($Computer | Select -ExpandProperty RSDDetectedSystems.NetbiosComment)
-                    NewDetection = ($Computer | Select -ExpandProperty RSDDetectedSystems.NewDetection)
-                    OrganizationName = ($Computer | Select -ExpandProperty RSDDetectedSystems.OrgName)
-                    OSFamily = ($Computer | Select -ExpandProperty RSDDetectedSystems.OSFamily)
-                    OS = ($Computer | Select -ExpandProperty RSDDetectedSystems.OSPlatform)
-                    OSVersion = ($Computer | Select -ExpandProperty RSDDetectedSystems.OSVersion)
-                    Rogue = ($Computer | Select -ExpandProperty RSDDetectedSystems.Rogue)
-                    RogueAction = ($Computer | Select -ExpandProperty RSDDetectedSystems.RogueAction)
-                    RogueState = ($Computer | Select -ExpandProperty RSDDetectedSystems.RogueState)
-                    ServerName = ($Computer | Select -ExpandProperty RSDDetectedSystems.ServerName)
-                    Users = ($Computer | Select -ExpandProperty RSDDetectedSystems.Users)
+        If($PSCmdlet.ShouldProcess("$Filter","Creating output object for detectedsystem.find command results found using filter"))
+        {         
+            $FoundSystems = @()
+		    ForEach($Computer in $results.result.list.row)
+		    {
+		        $props = @{ComputerName = ($Computer | Select -ExpandProperty RSDDetectedSystems.NetbiosName)
+				        HostID = ($Computer | Select -ExpandProperty RSDDetectedSystems.HostID)
+                        AgentGUID = ($Computer | Select -ExpandProperty RSDDetectedSystems.AgentGUID)
+                        AgentVersion = ($Computer | Select -ExpandProperty RSDDetectedSystems.AgentVersion)
+                        Comments = ($Computer | Select -ExpandProperty RSDDetectedSystems.Comments)
+                        DetectedSourceName = ($Computer | Select -ExpandProperty RSDDetectedSystems.DetectedSourceName)
+                        DeviceType = ($Computer | Select -ExpandProperty RSDDetectedSystems.DeviceType)
+                        DNSName = ($Computer | Select -ExpandProperty RSDDetectedSystems.DnsName)
+                        Domain = ($Computer | Select -ExpandProperty RSDDetectedSystems.Domain)
+                        Exception = ($Computer | Select -ExpandProperty RSDDetectedSystems.Exception)
+                        ExceptionCategory = ($Computer | Select -ExpandProperty RSDDetectedSystems.ExceptionCategory)
+                        FriendlyComputerName = ($Computer | Select -ExpandProperty RSDDetectedSystems.FriendlyName)
+                        Ignored = ($Computer | Select -ExpandProperty RSDDetectedSystems.Ignored)
+                        Inactive = ($Computer | Select -ExpandProperty RSDDetectedSystems.Inactive)
+                        IPv6 = ($Computer | Select -ExpandProperty RSDDetectedSystems.IPV6)
+                        LastAgentCommunication = (Get-Date ($Computer | Select -ExpandProperty RSDDetectedSystems.LastAgentCommunication))
+                        LastDetectedTime =  (Get-Date ($Computer | Select -ExpandProperty RSDDetectedSystems.LastDetectedTime))
+                        LastReportingSensor = ($Computer | Select -ExpandProperty RSDDetectedSystems.LastReportingSensor)
+                        MACAddress = ($Computer | Select -ExpandProperty RSDDetectedSystems.MAC)
+                        Managed = ($Computer | Select -ExpandProperty RSDDetectedSystems.Managed)
+                        Description = ($Computer | Select -ExpandProperty RSDDetectedSystems.NetbiosComment)
+                        NewDetection = ($Computer | Select -ExpandProperty RSDDetectedSystems.NewDetection)
+                        OrganizationName = ($Computer | Select -ExpandProperty RSDDetectedSystems.OrgName)
+                        OSFamily = ($Computer | Select -ExpandProperty RSDDetectedSystems.OSFamily)
+                        OS = ($Computer | Select -ExpandProperty RSDDetectedSystems.OSPlatform)
+                        OSVersion = ($Computer | Select -ExpandProperty RSDDetectedSystems.OSVersion)
+                        Rogue = ($Computer | Select -ExpandProperty RSDDetectedSystems.Rogue)
+                        RogueAction = ($Computer | Select -ExpandProperty RSDDetectedSystems.RogueAction)
+                        RogueState = ($Computer | Select -ExpandProperty RSDDetectedSystems.RogueState)
+                        ServerName = ($Computer | Select -ExpandProperty RSDDetectedSystems.ServerName)
+                        Users = ($Computer | Select -ExpandProperty RSDDetectedSystems.Users)
 
                  
-		}
-		New-Object -TypeName PSObject -Property $props
-		}
-		$FoundSystems
+		        }
+		        $FoundSystems += New-Object -TypeName PSObject -Property $props
+		    }
+		    $FoundSystems
+        }
 	}
 	End{}
 }
