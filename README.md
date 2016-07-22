@@ -53,7 +53,11 @@ ChangeLog
 * Added a check for good connection to Connect-ePoServer.
 * Added Get-ePoServerRunningTask which gets task information for running tasks.
 * Added Start-ePoServerTask which runs a server task.
-
+* Version 1.4.1
+* Changed reliance on System.Net.WebClient to using Invoke-RestMethod
+as previously the password entered used for Credentials would have been
+in clear text in memory.
+* Tested functions after change and they appear to be working.
 TODO:
 * Add function for adding a user using core.addUser command.
 * Add function for removing a user using core.removeUser command.
