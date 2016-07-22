@@ -58,7 +58,9 @@ ChangeLog
 as previously the password entered used for Credentials would have been
 in clear text in memory.
 * Tested functions after change and they appear to be working.
+
 TODO:
+=====
 * Add function for adding a user using core.addUser command.
 * Add function for removing a user using core.removeUser command.
 * Add function to synchorinze Domains and AD with the system tree using  epo.syncDirectory command.
