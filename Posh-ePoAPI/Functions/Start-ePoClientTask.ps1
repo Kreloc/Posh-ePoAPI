@@ -10,6 +10,12 @@
 		
 		.PARAMETER ComputerName
 			The name of the computer to start the client task on.
+
+        .PARAMETER TaskId
+            The id number of the client task to run.
+
+        .PARAMETER ProductId
+            The Product ID of the product to run with that task.
 		
 		.EXAMPLE
 			Start-ePoClientTask -ComputerName "THATPC" -ProductId "VIRUSCAN8800" -TaskId "111"

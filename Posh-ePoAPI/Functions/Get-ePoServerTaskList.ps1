@@ -12,7 +12,7 @@
 		.EXAMPLE
 			$ServerTaskList = Get-ePoServerTaskList
 			
-			Returns an object of the results of the system.findGroups search for groups with Admin in their names.
+			Stores information about all of the Server tasks available on the ePo server.
 			
         .NOTES
             Added logic to change true/false strings returned by API into boolean $True or $False values.

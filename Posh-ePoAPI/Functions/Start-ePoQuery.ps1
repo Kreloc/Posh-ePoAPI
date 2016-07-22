@@ -6,7 +6,7 @@
 		
 	.DESCRIPTION
 		Sends the command specified to the McAfee EPO server. Connect-ePoServer has to be run first,
-		as this function uses the epoServer global variable created by that functions connection to the server. Uses the Invoke-ePoCommand
+		as this function uses the epoServer global variable created by that functions connection to the server. Uses the Invoke-ePoCommand function.
 		
 	.PARAMETER QueryId
 		The ID number of the query to be run.

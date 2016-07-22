@@ -18,9 +18,9 @@ Function Connect-ePoServer
 			Connects to the default McAfee EPO Server.
 			
 		.EXAMPLE
-			Connect-ePoServer -ePOServer "https://yourserver"
+			Connect-ePoServer -ePOServer "https://yourserver:8443"
 			
-			Connects to the McAfee EPO Server at https://yourserver
+			Connects to the McAfee EPO Server at https://yourserver:8443
 
         .EXAMPLE
             Connect-ePoServer -ePoServer -ePOServer "https://yourserver"
@@ -30,7 +30,7 @@ Function Connect-ePoServer
 			
 		.NOTES
 			This function currently creates three script scope variables. 
-            The variable names are:wc, ePOServer. ePOServer is the url of the McAfee EPO Server. ePoCommands is a custom PowerShell object with the Command and CommandText for each
+            The variable names are:wc, ePOServer, and ePoCommands. ePOServer is the url of the McAfee EPO Server. ePoCommands is a custom PowerShell object with the Command and CommandText for each
             command found using the core.help API command. wc is the System.Net.WebClient that has the credentials and actually sends
             the requests to the ePo API.
             Added logic to check that the connection to the ePoServer works.

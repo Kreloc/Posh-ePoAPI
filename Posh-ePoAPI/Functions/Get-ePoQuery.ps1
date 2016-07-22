@@ -17,6 +17,7 @@
 
         .NOTES
             Used by Start-ePoQuery
+            TODO: Determine if this function and Start-ePoQuery should be consolidated into one function.
 			
 			
 	#>
