@@ -6,7 +6,8 @@ Function Invoke-ePOCommand
 		
 		.DESCRIPTION
 			Sends the command specified to the McAfee EPO server. Connect-ePoServer has to be run first,
-			as this function uses the epoServer global variable created by that functions connection to the server.
+			as this function uses the epoServer script variable created by that functions connection to the server as well as the 
+            credentials script variable.
             This function is the main piece of the entire POSH-ePoAPI module.
 		
 		.PARAMETER Command
@@ -20,6 +21,7 @@ Function Invoke-ePOCommand
         
         .NOTES
             Added support for -Whatif
+            Changed from System.Net.Webclient to using Invoke-RestMethod
 
 			
 	#>
@@ -37,7 +39,11 @@ Function Invoke-ePOCommand
 		{
 			Write-Warning "Connection to ePoServer not found. Please run Connect-ePoServer first."
 			break
-		}            
+		}
+        If(!($Credentials))
+        {
+            $Credentials = (Get-Credential)
+        }           
     }
 	Process 
 	{
@@ -57,7 +63,7 @@ Function Invoke-ePOCommand
 		}
         If($PSCmdlet.ShouldProcess("$Command","Downloading data in xml from commands sent to McAfee ePo API"))
         {
-		    [xml](($wc.DownloadString($url)) -replace "OK:`r`n")
+		    [xml]((Invoke-RestMethod -Uri $Url -Credential $Credentials) -replace "OK:`r`n")
         }
 	}
 	End{}

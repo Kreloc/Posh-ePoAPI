@@ -30,11 +30,12 @@ Function Connect-ePoServer
 			
 		.NOTES
 			This function currently creates three script scope variables. 
-            The variable names are:wc, ePOServer, and ePoCommands. ePOServer is the url of the McAfee EPO Server. ePoCommands is a custom PowerShell object with the Command and CommandText for each
-            command found using the core.help API command. wc is the System.Net.WebClient that has the credentials and actually sends
-            the requests to the ePo API.
+            The variable names are: Credentials, ePOServer, and ePoCommands. ePOServer is the url of the McAfee EPO Server. ePoCommands is a custom PowerShell object with the Command and CommandText for each
+            command found using the core.help API command. The Credentials variable is used for subsequent calls to the McAfee ePo API.
             Added logic to check that the connection to the ePoServer works.
-			
+            Changed to use Invoke-RestMethod as previous WebClient method was not securing password.
+            Module requires PowerShell verison 3 or higher.			
+
 	#>
 	[CmdletBinding()]
 	param
@@ -44,23 +45,15 @@ Function Connect-ePoServer
 		[string]$ePOServer,
         [Parameter(Mandatory=$False,
         ValueFromPipelinebyPropertyName=$true)]
-        $Credentials = (Get-Credential)
+        $script:Credentials = (Get-Credential)
 	)
-	Begin
-	{
-        [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
-		$script:epoServer = $ePOServer
-		$epoUser= $Credentials.GetNetworkCredential().username
-		$epoPassword=$Credentials.GetNetworkCredential().password
-		$script:wc=new-object System.net.WebClient
-		$wc.Credentials = New-Object System.Net.NetworkCredential -ArgumentList ($epouser,$epopassword)
-	}
+	Begin{}
 	Process 
 	{
 		$url = "$($epoServer)/remote/core.help?:output=xml"
         Try
         {
-		    $ePoCommands = [xml](($wc.DownloadString($url)) -replace "OK:`r`n")
+		    $ePoCommandResult = [xml]((Invoke-RestMethod -Uri $Url -Credential $Credentials) -replace "OK:`r`n")
         }
         Catch
         {
@@ -69,15 +62,14 @@ Function Connect-ePoServer
             $ePOServer = $null
             $wc = $null
         }
-        $script:ePoCommands = @()
-		ForEach($Command in $ePoCommands.result.list.element)
+        $script:ePoCommands = ForEach($Command in $ePoCommandResult.result.list.element)
         {
             $CommandName = ($Command -split ' ')[0]
             $CommandUse = $Command -replace ".*-"
             $props = @{Command=$CommandName
               CommandText=$CommandUse
               }
-            $ePoCommands += New-Object -TypeName PSObject -Property $props
+            New-Object -TypeName PSObject -Property $props
         }
 	}
 	End{}
