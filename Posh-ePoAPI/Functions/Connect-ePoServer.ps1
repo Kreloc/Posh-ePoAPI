@@ -42,7 +42,7 @@ Function Connect-ePoServer
 	(
 		[Parameter(Mandatory=$True,
 		ValueFromPipeline=$True, ValueFromPipelinebyPropertyName=$true)]
-		[string]$ePOServer,
+		[string]$script:ePOServer,
         [Parameter(Mandatory=$False,
         ValueFromPipelinebyPropertyName=$true)]
         $script:Credentials = (Get-Credential)

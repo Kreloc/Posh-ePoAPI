@@ -29,7 +29,8 @@ Function Find-ePoSystem
 
         .NOTES
             Added logic to determine the Percent of disk space left on each system.
-            TODO: Add support for Whatif
+            Added support for Whatif
+            Changed to using ArrayList
 			
 	#>
 	[CmdletBinding(SupportsShouldProcess=$true)]
@@ -53,7 +54,7 @@ Function Find-ePoSystem
 		$results = Invoke-ePoCommand -Command "system.find" -Parameters "searchText=$($Filter)"
         If($PSCmdlet.ShouldProcess("$Filter","Creating output object for system.find command results found using filter"))
         {   		
-            $FoundSystems = @()
+            $FoundSystems = New-Object System.Collections.ArrayList
             ForEach($Computer in $results.result.list.row)
 		    {
                 Write-Verbose "Getting properties for $($Computer | Select -ExpandProperty EPOComputerProperties.ComputerName)"
@@ -80,7 +81,7 @@ Function Find-ePoSystem
 					        AgentVersion = ($Computer | Select -ExpandProperty EPOLeafNode.AgentVersion)
 					        AgentGUID = ($Computer | Select -ExpandProperty EPOLeafNode.AgentGUID)
 		        }
-		        $FoundSystems += New-Object -TypeName PSObject -Property $props
+                $FoundSystems.Add((New-Object -TypeName PSObject -Property $props)) | Out-Null
 		    }
 		    $FoundSystems
         }
