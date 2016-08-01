@@ -1,17 +1,17 @@
 ---
 external help file: Posh-ePoAPI-help.xml
-online version: 
+online version: https://github.com/Kreloc
 schema: 2.0.0
 ---
 
-# Get-ePoGroup
+# Get-ePoServerRunningTask
 ## SYNOPSIS
-Gets ePoGroup information using the ePo API.
+Gets ePoServer Task information for running tasks using the ePo API.
 
 ## SYNTAX
 
 ```
-Get-ePoGroup [[-Filter] <String>] [-WhatIf] [-Confirm]
+Get-ePoServerRunningTask [-WhatIf] [-Confirm]
 ```
 
 ## DESCRIPTION
@@ -24,35 +24,13 @@ Uses the Invoke-ePoCommand
 
 ### -------------------------- EXAMPLE 1 --------------------------
 ```
-$ePoGroups = Get-ePoGroup
+$ServerTaskList = Get-ePoServerRunningTask
 ```
 
-Retruns the output of the system.findGroups API command and stores the results in a variable.
-
-### -------------------------- EXAMPLE 2 --------------------------
-```
-$FoundSystems = Get-ePoGroup -Filter "Admin"
-```
-
-Returns an object of the results of the system.findGroups search for groups with Admin in their names.
+Gets task information for running tasks on the ePoServer.
+Will be empty output if no running task is found.
 
 ## PARAMETERS
-
-### -Filter
-Search text, wildcards are not supported.
-Defaults to all groups.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases: 
-
-Required: False
-Position: 1
-Default value: 
-Accept pipeline input: True (ByPropertyName, ByValue)
-Accept wildcard characters: False
-```
 
 ### -WhatIf
 {{Fill WhatIf Description}}
@@ -89,10 +67,7 @@ Accept wildcard characters: False
 ## OUTPUTS
 
 ## NOTES
-Requires Connect-ePoServer to have been run first.
-All output is returned as a string currently, still looking
-into ways to convert it to an object.
-         Added support for Whatif
+Added support for Whatif
 
 ## RELATED LINKS
 

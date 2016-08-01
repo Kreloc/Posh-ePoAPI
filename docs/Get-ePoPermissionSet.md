@@ -4,30 +4,27 @@ online version: https://github.com/Kreloc
 schema: 2.0.0
 ---
 
-# Get-ePoServerTaskList
+# Get-ePoPermissionSet
 ## SYNOPSIS
-Gets ePoServer Task information using the ePo API.
+Gets users from ePo API.
 
 ## SYNTAX
 
 ```
-Get-ePoServerTaskList [-WhatIf] [-Confirm]
+Get-ePoPermissionSet [-WhatIf] [-Confirm]
 ```
 
 ## DESCRIPTION
-Sends the command specified to the McAfee EPO server.
-Connect-ePoServer has to be run first,
-as this function uses the epoServer global variable created by that functions connection to the server.
-Uses the Invoke-ePoCommand
+Gets users from ePo API using the core.exportPermissionSets API command.
 
 ## EXAMPLES
 
 ### -------------------------- EXAMPLE 1 --------------------------
 ```
-$ServerTaskList = Get-ePoServerTaskList
+Get-ePoPermissionSet
 ```
 
-Stores information about all of the Server tasks available on the ePo server.
+Gets all of the permission sets returned by the core.exportPermissionSets API command.
 
 ## PARAMETERS
 
@@ -66,9 +63,11 @@ Accept wildcard characters: False
 ## OUTPUTS
 
 ## NOTES
-Added logic to change true/false strings returned by API into boolean $True or $False values.
-Added logic to change date strings into DateTime objects.
-Added support for Whatif
+Gets users using the core.exportPermissionSetes API Command.
+Requires Global Administration access on ePoServer.
+Still need to figure out how to parse \<roles\> infor in innerXml
 
 ## RELATED LINKS
+
+[https://github.com/Kreloc](https://github.com/Kreloc)
 

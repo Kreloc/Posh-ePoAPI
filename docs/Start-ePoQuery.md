@@ -1,6 +1,6 @@
 ---
 external help file: Posh-ePoAPI-help.xml
-online version: 
+online version: https://github.com/Kreloc
 schema: 2.0.0
 ---
 
@@ -24,7 +24,7 @@ Start-ePoQuery -QueryName <Object> [-WhatIf] [-Confirm]
 Sends the command specified to the McAfee EPO server.
 Connect-ePoServer has to be run first,
 as this function uses the epoServer global variable created by that functions connection to the server.
-Uses the Invoke-ePoCommand
+Uses the Invoke-ePoCommand function.
 
 ## EXAMPLES
 
@@ -38,11 +38,9 @@ Returns the output of the query named Duplicate Systems Name
 ### -------------------------- EXAMPLE 2 --------------------------
 ```
 $ePoQueries = Get-ePoQuery
-```
-
 $QueryResults = $ePoQueries | Where {$_.Description -like "*unmanaged*"} | Start-ePoQuery
-      $QueryResults
-
+$QueryResults
+```
 Retruns the output of the core.listQueries API command and stores the PowerShell custom object in a variable $ePoQueries.
       This is then piped to where-object to find queries with a description with unmanged in it.
       This in then piped in turn to the Start-ePoQuery and the results are stored in a variable.

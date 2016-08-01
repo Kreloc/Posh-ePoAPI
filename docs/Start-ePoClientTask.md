@@ -1,6 +1,6 @@
 ---
 external help file: Posh-ePoAPI-help.xml
-online version: 
+online version: https://github.com/Kreloc
 schema: 2.0.0
 ---
 
@@ -55,7 +55,7 @@ Accept wildcard characters: False
 ```
 
 ### -TaskId
-{{Fill TaskId Description}}
+The id number of the client task to run.
 
 ```yaml
 Type: Object
@@ -70,7 +70,7 @@ Accept wildcard characters: False
 ```
 
 ### -ProductId
-{{Fill ProductId Description}}
+The Product ID of the product to run with that task.
 
 ```yaml
 Type: Object

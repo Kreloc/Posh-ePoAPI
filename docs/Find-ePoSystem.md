@@ -25,9 +25,8 @@ Uses the Invoke-ePoCommand
 ### -------------------------- EXAMPLE 1 --------------------------
 ```
 $CurrentPC = Find-ePoSystem -Filter $env:computername
-```
-
 $CurrentPC
+```
 
 Retruns the output of the system.find API command with a search paramter for the current computer.
 
@@ -99,7 +98,8 @@ Accept wildcard characters: False
 
 ## NOTES
 Added logic to determine the Percent of disk space left on each system.
-TODO: Add support for Whatif
+Added support for Whatif
+Changed to using ArrayList
 
 ## RELATED LINKS
 

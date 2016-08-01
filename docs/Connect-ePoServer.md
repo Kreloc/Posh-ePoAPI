@@ -11,7 +11,7 @@ The Connect-ePoServer function establishes a connection the McAfee EPO Server.
 ## SYNTAX
 
 ```
-Connect-ePoServer [-ePOServer] <String> [[-Credentials] <Object>]
+Connect-ePoServer [-script:ePOServer] <String> [[-script:Credentials] <Object>]
 ```
 
 ## DESCRIPTION
@@ -33,25 +33,26 @@ Connects to the default McAfee EPO Server.
 
 ### -------------------------- EXAMPLE 2 --------------------------
 ```
-Connect-ePoServer -ePOServer "https://yourserver"
+Connect-ePoServer -ePOServer "https://yourserver:8443"
 ```
 
-Connects to the McAfee EPO Server at https://yourserver
+Connects to the McAfee EPO Server at https://yourserver:8443
 
 ### -------------------------- EXAMPLE 3 --------------------------
 ```
 Connect-ePoServer -ePoServer -ePOServer "https://yourserver"
-```
+
 
 $ePoCommands | Where {$_.Command -like "*system*"} | Get-ePoCommandHelp
 
+```
 This makes an active connection to the server.
 It then gets the command help for all of the commands that have the word system in it.
 
 ## PARAMETERS
 
-### -ePOServer
-The url used to access the McAfee EPO.
+### -script:ePOServer
+{{Fill script:ePOServer Description}}
 
 ```yaml
 Type: String
@@ -65,8 +66,8 @@ Accept pipeline input: True (ByPropertyName, ByValue)
 Accept wildcard characters: False
 ```
 
-### -Credentials
-{{Fill Credentials Description}}
+### -script:Credentials
+{{Fill script:Credentials Description}}
 
 ```yaml
 Type: Object
@@ -86,13 +87,14 @@ Accept wildcard characters: False
 
 ## NOTES
 This function currently creates three script scope variables. 
-         The variable names are:wc, ePOServer.
+         The variable names are: Credentials, ePOServer, and ePoCommands.
 ePOServer is the url of the McAfee EPO Server.
 ePoCommands is a custom PowerShell object with the Command and CommandText for each
          command found using the core.help API command.
-wc is the System.Net.WebClient that has the credentials and actually sends
-         the requests to the ePo API.
+The Credentials variable is used for subsequent calls to the McAfee ePo API.
          Added logic to check that the connection to the ePoServer works.
+         Changed to use Invoke-RestMethod as previous WebClient method was not securing password.
+         Module requires PowerShell verison 3 or higher.
 
 ## RELATED LINKS
 

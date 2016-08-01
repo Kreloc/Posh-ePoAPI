@@ -1,6 +1,6 @@
 ---
 external help file: Posh-ePoAPI-help.xml
-online version: 
+online version: https://github.com/Kreloc
 schema: 2.0.0
 ---
 
@@ -17,7 +17,8 @@ Invoke-ePOCommand [-Command] <String> [[-Parameters] <String[]>] [-WhatIf] [-Con
 ## DESCRIPTION
 Sends the command specified to the McAfee EPO server.
 Connect-ePoServer has to be run first,
-as this function uses the epoServer global variable created by that functions connection to the server.
+as this function uses the epoServer script variable created by that functions connection to the server as well as the 
+         credentials script variable.
          This function is the main piece of the entire POSH-ePoAPI module.
 
 ## EXAMPLES
@@ -25,9 +26,8 @@ as this function uses the epoServer global variable created by that functions co
 ### -------------------------- EXAMPLE 1 --------------------------
 ```
 $CurrentPC = Invoke-ePOCommand -Command "system.find" -Parameters "searchText=$($env:computername)"
-```
-
 $CurrentPC.result.list.row
+```
 
 Retruns the output of the system.find API command with a search paramter for the current computer.
 
@@ -99,6 +99,7 @@ Accept wildcard characters: False
 
 ## NOTES
 Added support for -Whatif
+Changed from System.Net.Webclient to using Invoke-RestMethod
 
 ## RELATED LINKS
 

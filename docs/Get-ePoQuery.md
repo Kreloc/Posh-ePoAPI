@@ -1,6 +1,6 @@
 ---
 external help file: Posh-ePoAPI-help.xml
-online version: 
+online version: https://github.com/Kreloc
 schema: 2.0.0
 ---
 
@@ -25,9 +25,8 @@ Uses the Invoke-ePoCommand
 ### -------------------------- EXAMPLE 1 --------------------------
 ```
 $ePoQueries = Get-ePoQuery
-```
-
 $ePoQueries
+```
 
 Retruns the output of the core.listQueries API command and stores the PowerShell custom object in a variable.
 
@@ -69,6 +68,7 @@ Accept wildcard characters: False
 
 ## NOTES
 Used by Start-ePoQuery
+TODO: Determine if this function and Start-ePoQuery should be consolidated into one function.
 
 ## RELATED LINKS
 

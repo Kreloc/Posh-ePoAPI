@@ -37,16 +37,15 @@ Gets the help for the command system.find outputted into the Format-List Cmdlet
 ### -------------------------- EXAMPLE 3 --------------------------
 ```
 $DetectedSystemAddHelp = Get-ePoCommandHelp -Command "detectedsystem.add"
-```
-
 $DetectdSystemAddHelp.CommandUse
+```
 
 Gets the help for the command detectedsystem.add and stores it in a variable.
 Then the property CommandUse is expanded.
 The ParameterValues
 property returns all of the parameters.
 Still working on getting the ParameterName to return the paramters that aren't on the first line.
-Any parameter in \[\] is optional.
+Any parameter in [] is optional.
 
 ### -------------------------- EXAMPLE 4 --------------------------
 ```

@@ -37,11 +37,9 @@ Returns information about client tasks with scan in the task name.
 ### -------------------------- EXAMPLE 3 --------------------------
 ```
 $UpdateClientTasks = Get-ePoClientTask -Filter "update"
-```
-
 $DatUpdateTask = $UpdateClientTasks | Where {$_.TaskName -like "DAT Update"}
-
 $DatUpdateTask | Start-ePoClientTask -ComputerName "NEEDSDAT-UPDT"
+```
 
 First gets information about clients tasks with update in the task name and stores it in a variable.
 Then filters that variable to Where-Object, for tasks with a name like DAT Update and stores it in a variable.

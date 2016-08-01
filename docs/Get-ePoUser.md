@@ -4,30 +4,27 @@ online version: https://github.com/Kreloc
 schema: 2.0.0
 ---
 
-# Get-ePoServerTaskList
+# Get-ePoUser
 ## SYNOPSIS
-Gets ePoServer Task information using the ePo API.
+Gets users from ePo API.
 
 ## SYNTAX
 
 ```
-Get-ePoServerTaskList [-WhatIf] [-Confirm]
+Get-ePoUser [-WhatIf] [-Confirm]
 ```
 
 ## DESCRIPTION
-Sends the command specified to the McAfee EPO server.
-Connect-ePoServer has to be run first,
-as this function uses the epoServer global variable created by that functions connection to the server.
-Uses the Invoke-ePoCommand
+Gets users from ePo API using the core.listUsers API command.
 
 ## EXAMPLES
 
 ### -------------------------- EXAMPLE 1 --------------------------
 ```
-$ServerTaskList = Get-ePoServerTaskList
+Get-ePoUser
 ```
 
-Stores information about all of the Server tasks available on the ePo server.
+Gets all of the users returned by the core.listUsers API command.
 
 ## PARAMETERS
 
@@ -66,9 +63,10 @@ Accept wildcard characters: False
 ## OUTPUTS
 
 ## NOTES
-Added logic to change true/false strings returned by API into boolean $True or $False values.
-Added logic to change date strings into DateTime objects.
-Added support for Whatif
+Gets users using the core.listUsers API Command.
+Requires Global Administration access on ePoServer.
 
 ## RELATED LINKS
+
+[https://github.com/Kreloc](https://github.com/Kreloc)
 

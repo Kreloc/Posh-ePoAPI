@@ -4,51 +4,55 @@ online version: https://github.com/Kreloc
 schema: 2.0.0
 ---
 
-# Get-ePoTable
+# Start-ePoServerTask
 ## SYNOPSIS
-Gets table information using the ePo API.
+Starts the specified server task.
 
 ## SYNTAX
 
 ```
-Get-ePoTable [[-TableName] <String[]>] [-WhatIf] [-Confirm]
+Start-ePoServerTask [-TaskID] <Object> [-WhatIf] [-Confirm]
 ```
 
 ## DESCRIPTION
-Sends the command specified to the McAfee EPO server.
-Connect-ePoServer has to be run first,
-as this function uses the epoServer global variable created by that functions connection to the server.
-Uses the Invoke-ePoCommand
+Starts the specified server task.
+Requires the taskId of the servertask to run.
+Uses the
+         scheduler.runServerTask api command.
 
 ## EXAMPLES
 
 ### -------------------------- EXAMPLE 1 --------------------------
 ```
-$ePoTables = Get-ePoTable
-$ePoTables
+Start-ePoServerTask -TaskID 26
 ```
 
-Retruns the output of the core.listTables API command and stores the PowerShell custom object in a variable.
+Starts the server task with an ID of 26.
+This is the AD Sync task in my environment.
 
 ### -------------------------- EXAMPLE 2 --------------------------
 ```
-$FoundTable = Get-ePoTable -TableName "MyTable"
+$RunServerTasks = Get-ePoServerTaskList | Where {$_.Name -match "DAT update"} | Start-ePoServerTask
+$RunServerTasks | Get-ePoTaskLogHistory
 ```
 
-Returns an object of the results of the core.listTables API command with a table name of MyTable.
+First uses the Get-ePoServerTaskList function to find the server task(s) that have name(s) that match DAT update and then pipes the TaskId to 
+         the Start-ePoServerTask function.
+The result object is stored in the variable $RunServerTasks.
+         This variable is piped to Get-ePoTaskLogHistory, which uses the TaskID property of $RunServerTasks, to retrieve the TaskLog history for the server task(s)
+         just run.
 
 ## PARAMETERS
 
-### -TableName
-The database type-qualified name of the table to which view the details.
-Defaults to all tables.
+### -TaskID
+The id number of the server task to run.
 
 ```yaml
-Type: String[]
+Type: Object
 Parameter Sets: (All)
 Aliases: 
 
-Required: False
+Required: True
 Position: 1
 Default value: 
 Accept pipeline input: True (ByPropertyName, ByValue)
@@ -90,7 +94,6 @@ Accept wildcard characters: False
 ## OUTPUTS
 
 ## NOTES
-Added support for an array of strings for the TableName parameter
 Added support for -Whatif
 
 ## RELATED LINKS

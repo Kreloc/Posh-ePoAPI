@@ -25,9 +25,8 @@ Uses the Invoke-ePoCommand
 ### -------------------------- EXAMPLE 1 --------------------------
 ```
 $CurrentPC = Find-ePoDetectedSystem -Filter $env:computername
-```
-
 $CurrentPC
+```
 
 Retruns the output of the system.find API command with a search paramter for the current computer.
 
@@ -41,9 +40,8 @@ Returns an object of the results of the system.find search for systems with Mark
 ### -------------------------- EXAMPLE 3 --------------------------
 ```
 $DomainFoundDetectedSystems = Find-ePoDetectedSystem -Filter "contonoso.com"
-```
-
 $DomainFoundDetectedSystems
+```
 
 Finds all of the detectedsystems with contonoso.com as their domain.
 
