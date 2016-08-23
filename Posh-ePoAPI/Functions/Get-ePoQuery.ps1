@@ -13,7 +13,7 @@
 			$ePoQueries = Get-ePoQuery
 			$ePoQueries
 		
-			Retruns the output of the core.listQueries API command and stores the PowerShell custom object in a variable.
+			Returns the output of the core.listQueries API command and stores the PowerShell custom object in a variable.
 
         .NOTES
             Used by Start-ePoQuery

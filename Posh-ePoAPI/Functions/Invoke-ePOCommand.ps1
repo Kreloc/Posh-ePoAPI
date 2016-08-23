@@ -17,7 +17,7 @@ Function Invoke-ePOCommand
 			$CurrentPC = Invoke-ePOCommand -Command "system.find" -Parameters "searchText=$($env:computername)"
 			$CurrentPC.result.list.row
 		
-			Retruns the output of the system.find API command with a search paramter for the current computer.
+			Returns the output of the system.find API command with a search paramter for the current computer.
         
         .NOTES
             Added support for -Whatif

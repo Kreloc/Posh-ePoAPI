@@ -42,12 +42,16 @@ Function Connect-ePoServer
 	(
 		[Parameter(Mandatory=$True,
 		ValueFromPipeline=$True, ValueFromPipelinebyPropertyName=$true)]
-		[string]$script:ePOServer,
+		[string]$epoServer,
         [Parameter(Mandatory=$False,
         ValueFromPipelinebyPropertyName=$true)]
-        $script:Credentials = (Get-Credential)
+        $Credentials = (Get-Credential)
 	)
-	Begin{}
+	Begin
+    {
+        $script:epoServer = $epoServer
+        $script:Credentials = $Credentials
+    }
 	Process 
 	{
 		$url = "$($epoServer)/remote/core.help?:output=xml"

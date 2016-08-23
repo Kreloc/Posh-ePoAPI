@@ -21,7 +21,7 @@
 		$QueryResults = $ePoQueries | Where {$_.Description -like "*unmanaged*"} | Start-ePoQuery
         $QueryResults
 		
-		Retruns the output of the core.listQueries API command and stores the PowerShell custom object in a variable $ePoQueries.
+		Returns the output of the core.listQueries API command and stores the PowerShell custom object in a variable $ePoQueries.
         This is then piped to where-object to find queries with a description with unmanged in it.
         This in then piped in turn to the Start-ePoQuery and the results are stored in a variable.
 

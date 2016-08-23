@@ -58,6 +58,8 @@ ChangeLog
 as previously the password entered used for Credentials would have been
 in clear text in memory.
 * Tested functions after change and they appear to be working.
+* Fixed issue with parameters on Connect-ePoServer by not setting the parameters to script scope and instead re creating those as script scope variables within the function.
+* Corrected minor spelling errors
 
 TODO:
 =====
