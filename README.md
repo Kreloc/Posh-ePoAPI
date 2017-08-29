@@ -36,7 +36,7 @@ This is a PowerShell module for working with the McAfee ePo server API.
 
 ###List all computers
 ```PowerShell
-#Gets all of the computers available from the LANDesk server
+#Gets all of the computers available from the McAfee ePo server
 	Find-ePoSystem
 
 #Gets computer that matches filter
